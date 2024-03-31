@@ -102,6 +102,24 @@ main() {
         thm_hl_med="#44415a";
         thm_hl_high="#56526e";
 
+    elif [[ $theme = spring ]]; then
+
+        thm_base="#191724"
+        thm_surface="#1f1d2e"
+        thm_overlay="#26233a"
+        thm_muted="#6e6a86"
+        thm_subtle="#908caa"
+        thm_text="#e0def4"
+        thm_love="#eb6f92"
+        thm_gold="#f6c177"
+        thm_rose="#ebbcba"
+        thm_pine="#6ca691"
+        thm_foam="#9ccfd8"
+        thm_iris="#c4a7e7"
+        thm_hl_low="#21202e"
+        thm_hl_med="#403d52"
+        thm_hl_high="#524f67"
+
     fi
 
     # Aggregating all commands into a single array
@@ -184,6 +202,11 @@ main() {
     local bar_bg_disabled_color_option
     bar_bg_disabled_color_option="$(get_tmux_option "@rose_pine_bar_bg_disabled_color_option" "0")"
     readonly bar_bg_disabled_color_option
+
+    # Catppuccin like bubbles styling
+    local bubbles
+    bubbles="$(get_tmux_option "@rose_pine_bubbles" "")"
+    readonly bubbles
 
     # Shows hostname of the computer the tmux session is run on
     local only_windows
@@ -280,7 +303,11 @@ main() {
     show_window_in_window_status_current="#I#[fg=$thm_gold,bg=""]$left_separator#[fg=$thm_gold,bg=""]#W"
 
     local show_session
-    readonly show_session=" #[fg=$thm_text]$current_session_icon #[fg=$thm_text]#S "
+    if [[ "$bubbles" == "on" ]]; then
+        readonly show_session=" #[fg=$thm_rose]$current_session_icon #[fg=$thm_rose]#S#[fg=$thm_surface]$window_status_separator"
+    else
+        readonly show_session=" #[fg=$thm_text]$current_session_icon #[fg=$thm_text]#S#"
+    fi
 
     local show_user
     readonly show_user="#[fg=$thm_iris]#(whoami)#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$username_icon"
@@ -333,15 +360,27 @@ main() {
     # It sets the base colors for active / inactive, no matter the window appearence switcher choice
     # TEST: This needs to be tested further
     if [[ "$bar_bg_disable" == "on" ]]; then
-        set status-style "fg=$thm_pine,bg=$bar_bg_disabled_color_option"
-        show_window_in_window_status="#[fg=$thm_muted,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_muted,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_muted,bg=$bar_bg_disabled_color_option]#W"
-        show_window_in_window_status_current="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#W"
-        show_directory_in_window_status="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
-        show_directory_in_window_status_current="#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
-        set window-status-style "fg=$thm_iris,bg=$bar_bg_disabled_color_option"
-        set window-status-current-style "fg=$thm_gold,bg=$bar_bg_disabled_color_option"
-        set window-status-activity-style "fg=$thm_rose,bg=$bar_bg_disabled_color_option"
-        set message-style "fg=$thm_muted,bg=$bar_bg_disabled_color_option"
+        if [[ "$bubbles" == "on" ]]; then
+          set status-style "fg=$thm_overlay,bg=$bar_bg_disabled_color_option"
+          show_window_in_window_status="#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]#W"
+          show_window_in_window_status_current="#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]#[fg=$thm_rose,bg=$thm_surface]#I$left_separator#W#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]"
+          show_directory_in_window_status="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
+          show_directory_in_window_status_current="#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
+          set window-status-style "fg=$thm_iris,bg=$bar_bg_disabled_color_option"
+          set window-status-current-style "fg=$thm_gold,bg=$bar_bg_disabled_color_option"
+          set window-status-activity-style "fg=$thm_rose,bg=$bar_bg_disabled_color_option"
+          set message-style "fg=$thm_muted,bg=$bar_bg_disabled_color_option"
+        else
+          set status-style "fg=$thm_pine,bg=$bar_bg_disabled_color_option"
+          show_window_in_window_status="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#W"
+          show_window_in_window_status_current="#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#W"
+          show_directory_in_window_status="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
+          show_directory_in_window_status_current="#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
+          set window-status-style "fg=$thm_iris,bg=$bar_bg_disabled_color_option"
+          set window-status-current-style "fg=$thm_gold,bg=$bar_bg_disabled_color_option"
+          set window-status-activity-style "fg=$thm_rose,bg=$bar_bg_disabled_color_option"
+          set message-style "fg=$thm_muted,bg=$bar_bg_disabled_color_option"
+        fi
     fi
 
     # Window appearence switcher: 3 options for the user
