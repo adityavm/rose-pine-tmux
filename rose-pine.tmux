@@ -208,6 +208,10 @@ main() {
     bubbles="$(get_tmux_option "@rose_pine_bubbles" "")"
     readonly bubbles
 
+    local show_zoom
+    show_zoom="$(get_tmux_option "@rose_pine_show_zoom" "")"
+    readonly show_zoom
+
     # Shows hostname of the computer the tmux session is run on
     local only_windows
     only_windows="$(get_tmux_option "@rose_pine_only_windows" "")"
@@ -285,6 +289,9 @@ main() {
     # NOTE: Don't remove
     field_separator="$(get_tmux_option "@rose_pine_field_separator" " | " )"
 
+    local zoom_indicator
+    zoom_indicator="$(get_tmux_option "@rose_pine_zoom_indicator" " ")"
+
     # END
 
     local spacer
@@ -328,6 +335,11 @@ main() {
     local show_directory_in_window_status_current
     show_directory_in_window_status_current="#I$left_separator#[fg=$thm_gold,bg=""]#{b:pane_current_path}"
 
+    local show_zoom_indicator
+    if [[ "$show_zoom" == "on" ]]; then
+        show_zoom_indicator="#{?window_zoomed_flag,$zoom_indicator,}"
+    fi
+
     # TODO: This needs some work and testing, rn I can't figure it out
     # if [[ "$active_window_color" == "love" ]]; then
     #     show_window_in_window_status_current="#[bg=$thm_love,bg=$thm_base]#I$left_separator#W"
@@ -362,8 +374,8 @@ main() {
     if [[ "$bar_bg_disable" == "on" ]]; then
         if [[ "$bubbles" == "on" ]]; then
           set status-style "fg=$thm_overlay,bg=$bar_bg_disabled_color_option"
-          show_window_in_window_status="#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]#W"
-          show_window_in_window_status_current="#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]#[fg=$thm_rose,bg=$thm_surface]#I$left_separator#W#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]"
+          show_window_in_window_status="#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]$show_zoom_indicator#I#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_subtle,bg=$bar_bg_disabled_color_option]#W"
+          show_window_in_window_status_current="#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]#[fg=$thm_rose,bg=$thm_surface]$show_zoom_indicator#I$left_separator#W#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]"
           show_directory_in_window_status="#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_iris,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
           show_directory_in_window_status_current="#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#I#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]$left_separator#[fg=$thm_gold,bg=$bar_bg_disabled_color_option]#{b:pane_current_path}"
           set window-status-style "fg=$thm_iris,bg=$bar_bg_disabled_color_option"
