@@ -304,7 +304,7 @@ main() {
 
     local show_session
     if [[ "$bubbles" == "on" ]]; then
-        readonly show_session=" #[fg=$thm_rose]$current_session_icon #[fg=$thm_rose]#S#[fg=$thm_surface]$window_status_separator"
+        readonly show_session="#{?client_prefix,#[fg=$thm_love]#[bg=$bar_bg_disabled_color_option],}#{?client_prefix,#[bg=$thm_love]#[fg=$bar_bg_disabled_color_option],#[fg=$thm_rose]#[bg=$bar_bg_disabled_color_option]}$current_session_icon #S#{?client_prefix,#[fg=$thm_love]#[bg=$bar_bg_disabled_color_option],}#[fg=$thm_surface,bg=$bar_bg_disabled_color_option]$window_status_separator"
     else
         readonly show_session=" #[fg=$thm_text]$current_session_icon #[fg=$thm_text]#S#"
     fi
